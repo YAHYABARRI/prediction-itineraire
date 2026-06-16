@@ -37,4 +37,41 @@ public class RouteRequest {
     public void setEndLng(double endLng) {
         this.endLng = endLng;
     }
+
+    private String departureName;
+    private String destinationName;
+    private Integer hour;
+    private Long userId;
+
+    public String getDepartureName() {
+        return departureName;
+    }
+
+    public void setDepartureName(String departureName) {
+        this.departureName = departureName;
+    }
+
+    public String getDestinationName() {
+        return destinationName;
+    }
+
+    public void setDestinationName(String destinationName) {
+        this.destinationName = destinationName;
+    }
+
+    public Integer getHour() {
+        return hour;
+    }
+
+    public void setHour(Integer hour) {
+        this.hour = hour;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

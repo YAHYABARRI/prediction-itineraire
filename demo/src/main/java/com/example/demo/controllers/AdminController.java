@@ -10,7 +10,9 @@ import com.example.demo.repository.UtilisateurRepository;
 import com.example.demo.service.ItineraireService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -20,15 +22,17 @@ import java.util.Optional;
 public class AdminController {
 
     private final UtilisateurRepository utilisateurRepository;
-
     private final SearchHistoryRepository searchHistoryRepository;
+    private final ItineraireService itineraireService;
 
     public AdminController(
             UtilisateurRepository utilisateurRepository,
-            SearchHistoryRepository searchHistoryRepository
+            SearchHistoryRepository searchHistoryRepository,
+            ItineraireService itineraireService
     ) {
         this.utilisateurRepository = utilisateurRepository;
         this.searchHistoryRepository = searchHistoryRepository;
+        this.itineraireService = itineraireService;
     }
 
     @GetMapping("/users")
@@ -59,8 +63,35 @@ public class AdminController {
         return searchHistoryRepository.findAll();
     }
 
+    @GetMapping("/itineraries")
+    public List<Itineraire> getAllItineraires() {
+        return itineraireService.getAllItineraires();
+    }
+
     @GetMapping("/popular-places")
     public List<Object[]> getPopularPlaces() {
         return searchHistoryRepository.findMostVisitedPlaces();
+    }
+    @GetMapping("/dashboard")
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
+
+        stats.put("totalUsers", utilisateurRepository.count());
+        stats.put("totalSearches", searchHistoryRepository.count());
+        stats.put("popularPlaces", searchHistoryRepository.findMostVisitedPlaces());
+
+        return stats;
+    }
+
+    @GetMapping("/analytics")
+    public Map<String, Object> getAnalyticsData() {
+        Map<String, Object> analytics = new HashMap<>();
+
+        analytics.put("searchesPerDay", searchHistoryRepository.findSearchesPerDay());
+        analytics.put("mostVisitedPlaces", searchHistoryRepository.findMostVisitedPlaces());
+        analytics.put("predictionsPerWeek", searchHistoryRepository.findPredictionsPerWeek());
+        analytics.put("topUsers", searchHistoryRepository.findTopUsers());
+
+        return analytics;
     }
 }

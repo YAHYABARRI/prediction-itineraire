@@ -13,6 +13,7 @@ public class Utilisateur {
     private Long id;
 
     private String nom;
+    @Column(unique = true)
     private String email;
     private String password;
 

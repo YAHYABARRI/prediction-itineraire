@@ -1,33 +1,51 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
+import pandas as pd
 import joblib
 
-# ✅ 1. charger le dataset AVANT tout
+# Charger dataset
 df = pd.read_csv("dataset.csv")
 
-# ✅ 2. (optionnel) vérifier
-print(df.head())
+# Features
+X = df[[
+    "start_lat",
+    "start_lon",
+    "end_lat",
+    "end_lon",
+    "distance",
+    "hour"
+]]
 
-# ✅ 3. définir X et y
-X = df[["start_lat", "start_lon", "end_lat", "end_lon", "distance", "hour"]]
+# Target
 y = df["duration"]
 
-# split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
+)
 
-# modèle
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+# Model
+model = RandomForestRegressor(
+    n_estimators=200,
+    random_state=42
+)
+
+# Training
 model.fit(X_train, y_train)
 
-# test
-predictions = model.predict(X_test)
+# Prediction
+y_pred = model.predict(X_test)
 
-error = mean_absolute_error(y_test, predictions)
-print("Erreur moyenne :", error)
+# Evaluation
+mae = mean_absolute_error(y_test, y_pred)
 
-# sauvegarde
+print(f"MAE : {mae:.2f} secondes")
+
+# Save model
 joblib.dump(model, "model.pkl")
 
-print("✅ Modèle sauvegardé")
+print("Model saved successfully!")
